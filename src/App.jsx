@@ -52,7 +52,7 @@ const products = [
     description: 'Caderno universitário de capa dura para acompanhar seus estudos e organizar as anotações do dia a dia.',
     specifications: [
       'Formato: 200 mm x 275 mm',
-      'Número de folhas: 240 folhas',
+      'Número de folhas: 240',
       'Número de matérias: 15 matérias',
       'Capa e contracapa: dura com papelão 820 g/m²',
       'Revestimento em papel couchê 120 g/m² com parte interna pautada',
