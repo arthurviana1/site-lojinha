@@ -1,0 +1,474 @@
+.tela-acesso {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  border: 0;
+}
+
+.login-page {
+  width: 100%;
+  min-height: calc(100vh - 150px);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background: #fff;
+}
+
+.login-brandbar {
+  min-height: 82px;
+  display: grid;
+  place-items: center;
+  background: var(--navy);
+}
+
+.login-brandbar a {
+  display: inline-flex;
+}
+
+.login-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--yellow);
+}
+
+.login-logo .image-placeholder {
+  color: var(--navy);
+  background: var(--yellow);
+  font-family: Georgia, serif;
+  font-size: 23px;
+}
+
+.login-content {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 52px 18px 36px;
+}
+
+.login-form {
+  width: min(100%, 190px);
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form h1 {
+  margin: 0 0 22px;
+  color: #0785a4;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.login-form label {
+  margin: 0 0 5px;
+  color: #6b6f75;
+  font-size: 11px;
+}
+
+.login-form .form-control {
+  min-height: 23px;
+  margin-bottom: 20px;
+  padding: 3px 7px;
+  border-radius: 2px;
+  font-size: 12px;
+}
+
+.login-password-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-password-heading button,
+.login-register-prompt {
+  color: #141923;
+  font-size: 9px;
+}
+
+.login-password-heading button {
+  margin: 0 0 5px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.login-submit,
+.login-register {
+  min-height: 23px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-size: 10px;
+}
+
+.login-error {
+  margin: -12px 0 12px;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.login-error {
+  color: #b02a37;
+}
+
+.login-register-prompt {
+  margin: 9px 0 3px 4px;
+}
+
+.tela-acesso .site-footer {
+  min-height: 64px;
+  display: grid;
+  place-items: center;
+  padding: 14px;
+}
+
+.account-page {
+  width: min(100%, 1160px);
+  min-height: 615px;
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 34px;
+  margin: 0 auto;
+  padding: 48px 32px;
+}
+
+.account-sidebar {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #88d7e5;
+}
+
+.account-profile {
+  min-height: 176px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: #fff;
+  background: var(--navy);
+}
+
+.account-profile p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.account-user-icon {
+  width: 58px;
+  height: 58px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  border: 3px solid #fff;
+  border-radius: 50%;
+}
+
+.account-user-icon i {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 8px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+}
+
+.account-user-icon b {
+  width: 31px;
+  height: 17px;
+  position: absolute;
+  bottom: 6px;
+  border: 3px solid #fff;
+  border-bottom: 0;
+  border-radius: 18px 18px 0 0;
+}
+
+.account-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.account-menu-active,
+.account-menu a,
+.account-menu > button {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 0;
+  border-bottom: 1px solid #88d7e5;
+  color: #15191f;
+  background: #fff;
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+  text-decoration: none;
+}
+
+.account-menu-active {
+  color: #fff;
+  background: var(--navy);
+}
+
+.account-menu a {
+  margin-top: auto;
+}
+
+.account-menu > button {
+  cursor: pointer;
+}
+
+.account-form {
+  width: min(100%, 640px);
+  align-self: start;
+}
+
+.account-form h1 {
+  margin: 0 0 22px;
+  color: #0785a4;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.account-form label {
+  display: block;
+  margin: 0 0 4px;
+  color: #6b6f75;
+  font-size: 11px;
+}
+
+.account-form .form-control {
+  min-height: 36px;
+  margin-bottom: 7px;
+  font-size: 12px;
+}
+
+.account-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 13px;
+}
+
+.account-actions .btn {
+  min-width: 82px;
+  min-height: 36px;
+  font-size: 11px;
+}
+
+.account-saved {
+  margin: 8px 0 0;
+  color: #147435;
+  font-size: 12px;
+}
+
+.register-page {
+  width: 100%;
+  min-height: calc(100vh - 150px);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background: #fff;
+}
+
+.register-content {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 18px 36px;
+}
+
+.register-form {
+  width: min(100%, 320px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.register-form h1 {
+  margin: 0 0 22px;
+  color: #0785a4;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.register-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+}
+
+.register-fields label {
+  display: block;
+  margin: 0 0 4px;
+  color: #6b6f75;
+  font-size: 11px;
+}
+
+.register-fields .form-control {
+  min-height: 23px;
+  padding: 3px 7px;
+  border-radius: 2px;
+  font-size: 12px;
+}
+
+.register-error {
+  margin: 12px 0 0;
+  color: #b02a37;
+  font-size: 11px;
+}
+
+.register-submit {
+  width: min(100%, 156px);
+  min-height: 23px;
+  align-self: center;
+  margin-top: 48px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-size: 10px;
+}
+
+.recovery-page {
+  width: 100%;
+  min-height: calc(100vh - 150px);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background: #fff;
+}
+
+.recovery-content {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 52px 18px 36px;
+}
+
+.recovery-form {
+  width: min(100%, 190px);
+  display: flex;
+  flex-direction: column;
+}
+
+.recovery-form h1 {
+  margin: 0 0 20px;
+  color: #0785a4;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.recovery-form label {
+  margin-bottom: 5px;
+  color: #6b6f75;
+  font-size: 11px;
+}
+
+.recovery-form .form-control {
+  min-height: 23px;
+  margin-bottom: 16px;
+  padding: 3px 7px;
+  border-radius: 2px;
+  font-size: 12px;
+}
+
+.recovery-form > p {
+  margin: 0 0 14px;
+  color: #6b6f75;
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.recovery-form > .recovery-confirmation {
+  color: #147435;
+}
+
+.recovery-submit {
+  min-height: 23px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  font-size: 10px;
+}
+
+.recovery-back {
+  align-self: center;
+  margin-top: 8px;
+  padding: 2px 6px;
+  color: var(--navy);
+  font-size: 10px;
+}
+
+@media (max-width: 760px) {
+  .tela-acesso {
+    width: 100%;
+  }
+
+  .login-brandbar {
+    min-height: 72px;
+  }
+
+  .login-logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .login-page {
+    min-height: calc(100vh - 140px);
+  }
+
+  .login-content {
+    padding-top: 42px;
+  }
+
+  .register-page {
+    min-height: calc(100vh - 140px);
+  }
+
+  .register-content {
+    padding-top: 34px;
+  }
+
+  .register-fields {
+    gap: 12px;
+  }
+
+  .register-submit {
+    margin-top: 36px;
+  }
+
+  .recovery-page {
+    min-height: calc(100vh - 140px);
+  }
+
+  .recovery-content {
+    padding-top: 42px;
+  }
+
+  .account-page {
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding: 24px 18px 32px;
+  }
+
+  .account-profile {
+    min-height: 145px;
+  }
+
+  .account-menu-active,
+  .account-menu a,
+  .account-menu > button {
+    min-height: 38px;
+  }
+
+  .account-menu a {
+    margin-top: 0;
+  }
+}
