@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import iconePerfil from '../assets/icones/icone-perfil.png'
+import Imagem from './Imagem.jsx'
 
 export default function PaginaConta({ usuario, onLogout, onSave }) {
   const [dados, setDados] = useState(usuario)
@@ -24,7 +26,7 @@ export default function PaginaConta({ usuario, onLogout, onSave }) {
     <section className="account-page container-fluid">
       <aside className="account-sidebar">
         <div className="account-profile">
-          <span className="account-user-icon" role="img" aria-label="Perfil do usuário"><i /><b /></span>
+          <Imagem src={iconePerfil} alt="Perfil do usuário" label="Perfil" className="account-user-icon" />
           <p>Olá, {dados.nome || 'Valter'}</p>
         </div>
         <div className="account-menu">

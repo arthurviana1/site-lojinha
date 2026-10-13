@@ -1,4 +1,15 @@
 import { useState } from 'react'
+import categoriaArtigosReligiosos from './assets/categorias/categoria-artigos-religiosos.jpg'
+import categoriaArteCriatividade from './assets/categorias/categoria-arte-criatividade.jpg'
+import categoriaOrganizacao from './assets/categorias/categoria-organizacao.jpg'
+import categoriaPapelaria from './assets/categorias/categoria-papelaria.jpg'
+import categoriaPresentes from './assets/categorias/categoria-presentes.jpg'
+import bannerVoltaAsAulas from './assets/carrosel/banner-volta-as-aulas.png'
+import produtoCaderno from './assets/produtos/produto-caderno-capa-dura-universitario.jpg'
+import produtoCaneta from './assets/produtos/produto-caneta-esferografica-bic.jpg'
+import produtoMarcaTexto from './assets/produtos/produto-marca-texto-bic-brite-liner.jpg'
+import produtoResma from './assets/produtos/produto-resma-papel-report-a4.jpg'
+import produtoTerco from './assets/produtos/produto-terco-cordao-madeira.png'
 import './Acesso.css'
 import CarrosselDestaques from './components/CarrosselDestaques.jsx'
 import CabecalhoLoja from './components/CabecalhoLoja.jsx'
@@ -17,11 +28,11 @@ import SecaoProdutos from './components/SecaoProdutos.jsx'
 import './App.css'
 
 const categoriasHome = [
-  { name: 'Papelaria', image: '/images/categoria-papelaria.webp' },
-  { name: 'Arte e Criatividade', image: '/images/categoria-arte-criatividade.webp' },
-  { name: 'Organização', image: '/images/categoria-organizacao.webp' },
-  { name: 'Presentes', image: '/images/categoria-presentes.webp' },
-  { name: 'Artigos religiosos', image: '/images/categoria-artigos-religiosos.webp' },
+  { name: 'Papelaria', image: categoriaPapelaria },
+  { name: 'Arte e Criatividade', image: categoriaArteCriatividade },
+  { name: 'Organização', image: categoriaOrganizacao },
+  { name: 'Presentes', image: categoriaPresentes },
+  { name: 'Artigos religiosos', image: categoriaArtigosReligiosos },
 ]
 
 const todasCategorias = [
@@ -31,17 +42,12 @@ const todasCategorias = [
 ]
 
 const products = [
-  { name: 'Caneta Esferográfica BIC Escrita Média Cristal Dura Mais, Preta', category: 'Papelaria', price: 'R$ 2,19', image: '/images/produto-caneta-esferografica-bic.webp' },
+  { name: 'Caneta Esferográfica BIC Escrita Média Cristal Dura Mais, Preta', category: 'Papelaria', price: 'R$ 2,19', image: produtoCaneta },
   {
     name: 'Caderno Universitário Capa Dura 15X1 240 Folhas Brief Azul Spiral',
     category: 'Papelaria',
     price: 'R$ 19,99',
-    image: '/images/produto-caderno-capa-dura-universitario.webp',
-    gallery: [
-      '/images/produto-caderno-capa-dura-universitario.webp',
-      '/images/produto-caderno-capa-dura-universitario-verso.webp',
-      '/images/produto-caderno-capa-dura-universitario-detalhe.webp',
-    ],
+    image: produtoCaderno,
     brand: 'Spiral',
     description: 'Caderno universitário de capa dura para acompanhar seus estudos e organizar as anotações do dia a dia.',
     specifications: [
@@ -54,15 +60,15 @@ const products = [
       'Miolo pautado padrão em papel offset 56 g/m²',
     ],
   },
-  { name: 'Terço no Cordão com Triângulo de Nossa Senhora', category: 'Artigos religiosos', price: 'R$ 18,90', image: '/images/produto-terco-cordao-madeira.webp' },
-  { name: 'Resma de Papel A4 Report 75g 500 folhas', category: 'Papelaria', price: 'R$ 34,15', image: '/images/produto-resma-papel-report-a4.webp' },
-  { name: 'Marca Texto BIC Brite Liner C/5', category: 'Papelaria', price: 'R$ 21,90', image: '/images/produto-marca-texto-bic-brite-liner.webp' },
+  { name: 'Terço no Cordão com Triângulo de Nossa Senhora', category: 'Artigos religiosos', price: 'R$ 18,90', image: produtoTerco },
+  { name: 'Resma de Papel A4 Report 75g 500 folhas', category: 'Papelaria', price: 'R$ 34,15', image: produtoResma },
+  { name: 'Marca Texto BIC Brite Liner C/5', category: 'Papelaria', price: 'R$ 21,90', image: produtoMarcaTexto },
 ]
 
 const slides = [
-  { title: 'Volta às aulas!', description: 'Tudo o que você precisa pro ano letivo, num só lugar.', image: '/images/banner-volta-as-aulas.webp' },
-  { title: 'Ideias que ganham cor', description: 'Materiais para criar, desenhar e tirar seus planos do papel.', image: '/images/banner-arte-e-criatividade.webp' },
-  { title: 'Seu espaço, do seu jeito', description: 'Encontre tudo para deixar a rotina mais organizada.', image: '/images/banner-organize-seus-estudos.webp' },
+  { title: 'Volta às aulas!', description: 'Tudo o que você precisa pro ano letivo, num só lugar.', image: bannerVoltaAsAulas },
+  { title: 'Ideias que ganham cor', description: 'Materiais para criar, desenhar e tirar seus planos do papel.', image: bannerVoltaAsAulas },
+  { title: 'Seu espaço, do seu jeito', description: 'Encontre tudo para deixar a rotina mais organizada.', image: bannerVoltaAsAulas },
 ]
 
 function Loja() {

@@ -29,6 +29,7 @@
 .header-link { padding: 7px 0; border: 0; background: transparent; cursor: pointer; }
 .account-link { width: 32px; height: 32px; padding: 4px !important; }
 .account-icon { width: 100%; height: 100%; border-radius: 50%; background: transparent; }
+.account-user-icon { background: transparent; }
 .account-icon .image-placeholder { padding: 0; color: white; background: transparent; font-size: 7px; }
 .cart-link { width: 34px; height: 34px; padding: 4px !important; border: 0 !important; color: white; background: transparent !important; cursor: pointer; }
 .cart-icon { width: 100%; height: 100%; background: transparent; }

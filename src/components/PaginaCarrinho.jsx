@@ -1,3 +1,5 @@
+import produtoCaderno from '../assets/produtos/produto-caderno-capa-dura-universitario.jpg'
+import produtoCaneta from '../assets/produtos/produto-caneta-esferografica-bic.jpg'
 import Imagem from './Imagem.jsx'
 
 const itensIniciais = [
@@ -6,14 +8,14 @@ const itensIniciais = [
     nome: 'Caderno Universitário Capa Dura 15X1 240 Folhas Brief Azul Spiral',
     preco: 19.99,
     quantidade: 1,
-    imagem: '/images/produto-caderno-capa-dura-universitario.webp',
+    imagem: produtoCaderno,
   },
   {
     id: 'caneta',
     nome: 'Caneta Esferográfica BIC Escrita Média Cristal Dura Mais, Preta',
     preco: 2.19,
     quantidade: 3,
-    imagem: '/images/produto-caneta-esferografica-bic.webp',
+    imagem: produtoCaneta,
   },
 ]
 

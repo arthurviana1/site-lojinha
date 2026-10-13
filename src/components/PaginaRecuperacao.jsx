@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import logoLojinha from '../assets/logo/logo-lojinha.png'
 import Imagem from './Imagem.jsx'
 
 export default function PaginaRecuperacao({ onHome, onBackToLogin }) {
@@ -14,7 +15,7 @@ export default function PaginaRecuperacao({ onHome, onBackToLogin }) {
     <main className="recovery-page">
       <header className="login-brandbar">
         <a href="#inicio" onClick={(event) => { event.preventDefault(); onHome() }} aria-label="Voltar à página inicial">
-          <Imagem src="/images/logo-lojinha.webp" alt="Logo Lojinha a Graciosa" label="LG" className="login-logo" />
+          <Imagem src={logoLojinha} alt="Logo Lojinha a Graciosa" label="LG" className="login-logo" />
         </a>
       </header>
       <section className="recovery-content">
