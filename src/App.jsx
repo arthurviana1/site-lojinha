@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
 import categoriaArtigosReligiosos from './assets/categorias/categoria-artigos-religiosos.jpg'
 import categoriaArteCriatividade from './assets/categorias/categoria-arte-criatividade.jpg'
 import categoriaOrganizacao from './assets/categorias/categoria-organizacao.jpg'
@@ -71,153 +72,144 @@ const slides = [
   { title: 'Seu espaço, do seu jeito', description: 'Encontre tudo para deixar a rotina mais organizada.', image: bannerVoltaAsAulas },
 ]
 
+function RotaCategoria({ categorias, produtos }) {
+  const navigate = useNavigate()
+  const { nomeCategoria } = useParams()
+  const categoria = decodeURIComponent(nomeCategoria)
+
+  return (
+    <main className="store-main">
+      <PaginaCategoria
+        categorias={categorias}
+        categoriaSelecionada={categoria}
+        onSelectCategory={(nome) => navigate(`/categoria/${encodeURIComponent(nome)}`)}
+        onSelectProduct={(produto) => navigate(`/produto/${products.indexOf(produto)}`)}
+        onHome={() => navigate('/')}
+        produtos={produtos}
+      />
+    </main>
+  )
+}
+
+function RotaProduto({ produtos }) {
+  const navigate = useNavigate()
+  const { idProduto } = useParams()
+  const produto = produtos[Number(idProduto)]
+
+  if (!produto) return <Navigate to="/" replace />
+
+  return (
+    <main className="store-main">
+      <PaginaProduto produto={produto} onBack={() => navigate(`/categoria/${encodeURIComponent(produto.category)}`)} />
+    </main>
+  )
+}
+
 function Loja() {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [activeSlide, setActiveSlide] = useState(0)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('Todas as categorias')
-  const [selectedCategory, setSelectedCategory] = useState('')
-  const [selectedProduct, setSelectedProduct] = useState(null)
-  const [activeNav, setActiveNav] = useState('')
-  const [paginaAcesso, setPaginaAcesso] = useState('')
   const [usuario, setUsuario] = useState(null)
   const filteredProducts = products.filter((product) => product.name.toLocaleLowerCase('pt-BR').includes(search.trim().toLocaleLowerCase('pt-BR')))
+  const paginaAcesso = ['/login', '/cadastro', '/recuperar-senha'].includes(location.pathname)
+  const activeNav = location.pathname.startsWith('/impressao')
+    ? 'impressao'
+    : location.pathname.startsWith('/categoria/') || location.pathname.startsWith('/produto/') || location.hash === '#produtos'
+      ? 'produtos'
+      : location.hash === '#contato' ? 'contato' : ''
 
-  function showProducts() {
-    document.querySelector('#produtos')?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  function navigateTo(section, navItem) {
-    setPaginaAcesso('')
-    setSelectedCategory('')
-    setSelectedProduct(null)
-    setActiveNav(navItem)
+  function navigateTo(section) {
+    navigate(`/#${section}`)
     window.setTimeout(() => document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' }), 0)
   }
 
   function goHome() {
-    setPaginaAcesso('')
-    setSelectedCategory('')
-    setSelectedProduct(null)
-    setActiveNav('')
-    window.setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0)
+    navigate('/')
   }
 
   function openProductCatalog() {
-    setPaginaAcesso('')
-    setSelectedCategory('Categorias')
-    setSelectedProduct(null)
-    setActiveNav('produtos')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    navigate('/categoria/Categorias')
   }
 
   function openPrinting() {
-    setPaginaAcesso('impressao')
-    setSelectedCategory('')
-    setSelectedProduct(null)
-    setActiveNav('impressao')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    navigate('/impressao')
   }
 
   function openPrintForm() {
-    setPaginaAcesso('formulario-impressao')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    navigate('/impressao/formulario')
   }
 
   function openAccount() {
-    setSelectedCategory('')
-    setSelectedProduct(null)
-    setPaginaAcesso(usuario ? 'conta' : 'login')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    navigate(usuario ? '/conta' : '/login')
   }
 
   function openRegistration() {
-    setPaginaAcesso('cadastro')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    navigate('/cadastro')
   }
 
   function openRecovery() {
-    setPaginaAcesso('recuperar')
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    navigate('/recuperar-senha')
   }
 
   function openCart() {
-    setPaginaAcesso('carrinho')
-    setSelectedCategory('')
-    setSelectedProduct(null)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    navigate('/carrinho')
   }
 
   function login() {
     setUsuario({ nome: 'Valter', sobrenome: '', email: '1', telefone: '', nascimento: '' })
-    setPaginaAcesso('conta')
+    navigate('/conta')
   }
 
   function createAccount(newUser) {
     setUsuario(newUser)
-    setPaginaAcesso('conta')
+    navigate('/conta')
   }
 
   function logout() {
     setUsuario(null)
-    setPaginaAcesso('login')
+    navigate('/login')
   }
 
   return (
-    <div className={`store-shell ${['login', 'cadastro', 'recuperar'].includes(paginaAcesso) ? 'tela-acesso' : ''}`}>
-      {!['login', 'cadastro', 'recuperar'].includes(paginaAcesso) && (
+    <div className={`store-shell ${paginaAcesso ? 'tela-acesso' : ''}`}>
+      {!paginaAcesso && (
         <CabecalhoLoja
           categorias={categoriasHome}
           category={category}
           activeNav={activeNav}
           onHome={goHome}
-          onNavigate={navigateTo}
           onOpenProducts={openProductCatalog}
           onOpenPrint={openPrinting}
           onOpenAccount={openAccount}
           onOpenCart={openCart}
-          onCategoryChange={(value) => { setCategory(value); navigateTo('produtos', 'produtos') }}
-          onSearchSubmit={() => category === 'Todas as categorias' ? showProducts() : setSelectedCategory(category)}
+          onCategoryChange={(value) => { setCategory(value); showProducts() }}
+          onSearchSubmit={() => category === 'Todas as categorias' ? navigateTo('produtos') : navigate(`/categoria/${encodeURIComponent(category)}`)}
           search={search}
           setSearch={setSearch}
         />
       )}
-      {paginaAcesso === 'login' ? (
-        <PaginaLogin onLogin={login} onHome={goHome} onRegister={openRegistration} onRecover={openRecovery} />
-      ) : paginaAcesso === 'cadastro' ? (
-        <PaginaCadastro onHome={goHome} onCreateAccount={createAccount} />
-      ) : paginaAcesso === 'recuperar' ? (
-        <PaginaRecuperacao onHome={goHome} onBackToLogin={() => setPaginaAcesso('login')} />
-      ) : paginaAcesso === 'carrinho' ? (
-        <PaginaCarrinho />
-      ) : (
-        <main className="store-main">
-          {paginaAcesso === 'impressao' ? (
-            <PaginaImpressao onRequest={openPrintForm} />
-          ) : paginaAcesso === 'formulario-impressao' ? (
-            <FormularioImpressao />
-          ) : paginaAcesso === 'conta' ? (
-            <PaginaConta usuario={usuario} onLogout={logout} onSave={setUsuario} />
-          ) : selectedProduct ? (
-            <PaginaProduto produto={selectedProduct} onBack={() => setSelectedProduct(null)} />
-          ) : selectedCategory ? (
-            <PaginaCategoria
-              categorias={todasCategorias}
-              categoriaSelecionada={selectedCategory}
-              onSelectCategory={setSelectedCategory}
-              onSelectProduct={setSelectedProduct}
-              onHome={goHome}
-              produtos={products}
-            />
-          ) : (
-            <>
-              <CarrosselDestaques activeSlide={activeSlide} onChangeSlide={setActiveSlide} slides={slides} />
-              <SecaoCategorias categorias={categoriasHome} onSelectCategory={setSelectedCategory} onShowAll={() => setSelectedCategory('Categorias')} />
-              <SecaoProdutos produtos={filteredProducts} onSelectProduct={setSelectedProduct} />
-            </>
-          )}
-        </main>
-      )}
-      {paginaAcesso !== 'carrinho' && <Rodape />}
+      <Routes>
+        <Route path="/" element={(
+          <main className="store-main">
+            <CarrosselDestaques activeSlide={activeSlide} onChangeSlide={setActiveSlide} slides={slides} />
+            <SecaoCategorias categorias={categoriasHome} onSelectCategory={(nome) => navigate(`/categoria/${encodeURIComponent(nome)}`)} onShowAll={openProductCatalog} />
+            <SecaoProdutos produtos={filteredProducts} onSelectProduct={(produto) => navigate(`/produto/${products.indexOf(produto)}`)} />
+          </main>
+        )} />
+        <Route path="/categoria/:nomeCategoria" element={<RotaCategoria categorias={todasCategorias} produtos={products} />} />
+        <Route path="/produto/:idProduto" element={<RotaProduto produtos={products} />} />
+        <Route path="/login" element={<PaginaLogin onLogin={login} onHome={goHome} onRegister={openRegistration} onRecover={openRecovery} />} />
+        <Route path="/cadastro" element={<PaginaCadastro onHome={goHome} onCreateAccount={createAccount} />} />
+        <Route path="/recuperar-senha" element={<PaginaRecuperacao onHome={goHome} onBackToLogin={() => navigate('/login')} />} />
+        <Route path="/conta" element={usuario ? <main className="store-main"><PaginaConta usuario={usuario} onLogout={logout} onSave={setUsuario} /></main> : <Navigate to="/login" replace />} />
+        <Route path="/carrinho" element={<PaginaCarrinho />} />
+        <Route path="/impressao" element={<main className="store-main"><PaginaImpressao onRequest={openPrintForm} /></main>} />
+        <Route path="/impressao/formulario" element={<main className="store-main"><FormularioImpressao /></main>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      {location.pathname !== '/carrinho' && <Rodape />}
     </div>
   )
 }

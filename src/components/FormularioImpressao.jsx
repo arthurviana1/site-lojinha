@@ -1,5 +1,14 @@
 import { useState } from 'react'
 
+const camposImpressao = [
+  { nome: 'Cor', padrao: 'Colorido', opcoes: ['Colorido', 'Preto e branco'] },
+  { nome: 'Tamanho do Papel', padrao: 'A4', opcoes: ['A4', 'A3', 'Carta'] },
+  { nome: 'Quantidade de cópias', padrao: '1', opcoes: [1, 2, 3, 4, 5, 10] },
+  { nome: 'Lados', padrao: 'Frente e verso', opcoes: ['Frente e verso', 'Apenas frente'] },
+  { nome: 'Páginas', padrao: 'Todas', opcoes: ['Todas', 'Selecionar páginas'] },
+  { nome: 'Tipo de papel', padrao: 'Sulfite', opcoes: ['Sulfite', 'Fotográfico', 'Couchê'] },
+]
+
 export default function FormularioImpressao() {
   const [arquivos, setArquivos] = useState([])
   const [enviado, setEnviado] = useState(false)
@@ -19,49 +28,14 @@ export default function FormularioImpressao() {
         <div className="print-form-body">
           <h2>Formulário de impressão</h2>
           <div className="print-fields">
-            <label>
-              <span>Cor</span>
-              <select className="form-select" defaultValue="Colorido">
-                <option>Colorido</option>
-                <option>Preto e branco</option>
-              </select>
-            </label>
-            <label>
-              <span>Tamanho do Papel</span>
-              <select className="form-select" defaultValue="A4">
-                <option>A4</option>
-                <option>A3</option>
-                <option>Carta</option>
-              </select>
-            </label>
-            <label>
-              <span>Quantidade de cópias</span>
-              <select className="form-select" defaultValue="1">
-                {[1, 2, 3, 4, 5, 10].map((quantidade) => <option key={quantidade}>{quantidade}</option>)}
-              </select>
-            </label>
-            <label>
-              <span>Lados</span>
-              <select className="form-select" defaultValue="Frente e verso">
-                <option>Frente e verso</option>
-                <option>Apenas frente</option>
-              </select>
-            </label>
-            <label>
-              <span>Páginas</span>
-              <select className="form-select" defaultValue="Todas">
-                <option>Todas</option>
-                <option>Selecionar páginas</option>
-              </select>
-            </label>
-            <label>
-              <span>Tipo de papel</span>
-              <select className="form-select" defaultValue="Sulfite">
-                <option>Sulfite</option>
-                <option>Fotográfico</option>
-                <option>Couchê</option>
-              </select>
-            </label>
+            {camposImpressao.map((campo) => (
+              <label key={campo.nome}>
+                <span>{campo.nome}</span>
+                <select className="form-select" defaultValue={campo.padrao}>
+                  {campo.opcoes.map((opcao) => <option key={opcao}>{opcao}</option>)}
+                </select>
+              </label>
+            ))}
           </div>
           <label className="print-file-field">
             <span>Arquivos</span>

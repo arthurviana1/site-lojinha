@@ -106,12 +106,9 @@
 
 .login-error {
   margin: -12px 0 12px;
+  color: #b02a37;
   font-size: 10px;
   line-height: 1.4;
-}
-
-.login-error {
-  color: #b02a37;
 }
 
 .login-register-prompt {
