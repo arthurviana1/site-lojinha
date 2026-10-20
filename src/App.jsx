@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { createUserWithEmailAndPassword, deleteUser, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 import categoriaArtigosReligiosos from './assets/categorias/categoria-artigos-religiosos.jpg'
 import categoriaArteCriatividade from './assets/categorias/categoria-arte-criatividade.jpg'
 import categoriaOrganizacao from './assets/categorias/categoria-organizacao.jpg'
@@ -26,6 +28,8 @@ import PaginaProduto from './components/PaginaProduto.jsx'
 import Rodape from './components/Rodape.jsx'
 import SecaoCategorias from './components/SecaoCategorias.jsx'
 import SecaoProdutos from './components/SecaoProdutos.jsx'
+import { auth, db } from './firebase.js'
+import { firebaseErrorMessage } from './firebaseErrorMessage.js'
 import './App.css'
 
 const categoriasHome = [
@@ -112,6 +116,8 @@ function Loja() {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('Todas as categorias')
   const [usuario, setUsuario] = useState(null)
+  const [authCarregando, setAuthCarregando] = useState(true)
+  const [erroSessao, setErroSessao] = useState('')
   const filteredProducts = products.filter((product) => product.name.toLocaleLowerCase('pt-BR').includes(search.trim().toLocaleLowerCase('pt-BR')))
   const paginaAcesso = ['/login', '/cadastro', '/recuperar-senha'].includes(location.pathname)
   const activeNav = location.pathname.startsWith('/impressao')
@@ -119,6 +125,49 @@ function Loja() {
     : location.pathname.startsWith('/categoria/') || location.pathname.startsWith('/produto/') || location.hash === '#produtos'
       ? 'produtos'
       : location.hash === '#contato' ? 'contato' : ''
+
+  useEffect(() => {
+    let requestId = 0
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      const currentRequest = ++requestId
+      setErroSessao('')
+      if (!firebaseUser) {
+        setUsuario(null)
+        setAuthCarregando(false)
+        return
+      }
+
+      setAuthCarregando(true)
+      try {
+        const profileSnapshot = await getDoc(doc(db, 'usuarios', firebaseUser.uid))
+        if (currentRequest !== requestId) return
+        const profile = profileSnapshot.exists() ? profileSnapshot.data() : {}
+        setUsuario({
+          uid: firebaseUser.uid,
+          nome: profile.nome || firebaseUser.displayName || '',
+          sobrenome: profile.sobrenome || '',
+          email: firebaseUser.email || '',
+          telefone: profile.telefone || '',
+          nascimento: profile.nascimento || '',
+        })
+      } catch (error) {
+        if (currentRequest !== requestId) return
+        setUsuario({
+          uid: firebaseUser.uid,
+          nome: firebaseUser.displayName || '',
+          sobrenome: '',
+          email: firebaseUser.email || '',
+          telefone: '',
+          nascimento: '',
+        })
+        setErroSessao(firebaseErrorMessage(error, 'Não foi possível carregar os dados do seu perfil.'))
+      } finally {
+        if (currentRequest === requestId) setAuthCarregando(false)
+      }
+    })
+
+    return unsubscribe
+  }, [])
 
   function navigateTo(section) {
     navigate(`/#${section}`)
@@ -157,23 +206,87 @@ function Loja() {
     navigate('/carrinho')
   }
 
-  function login() {
-    setUsuario({ nome: 'Valter', sobrenome: '', email: '1', telefone: '', nascimento: '' })
-    navigate('/conta')
+  async function login(email, senha) {
+    setErroSessao('')
+    setAuthCarregando(true)
+    try {
+      await signInWithEmailAndPassword(auth, email, senha)
+      navigate('/conta')
+    } catch (error) {
+      setAuthCarregando(false)
+      throw new Error(firebaseErrorMessage(error, 'Não foi possível entrar. Tente novamente.'))
+    }
   }
 
-  function createAccount(newUser) {
-    setUsuario(newUser)
-    navigate('/conta')
+  async function createAccount(newUser) {
+    setErroSessao('')
+    setAuthCarregando(true)
+    const { senha, ...profile } = newUser
+    let credential
+    try {
+      credential = await createUserWithEmailAndPassword(auth, newUser.email, senha)
+      await setDoc(doc(db, 'usuarios', credential.user.uid), {
+        ...profile,
+        uid: credential.user.uid,
+        criadoEm: new Date().toISOString(),
+      })
+      setUsuario({ ...profile, uid: credential.user.uid, email: credential.user.email })
+      setAuthCarregando(false)
+      navigate('/conta')
+    } catch (error) {
+      if (credential?.user) {
+        try {
+          await deleteUser(credential.user)
+        } catch (cleanupError) {
+          console.error('Não foi possível remover a conta após falha ao salvar o perfil:', cleanupError)
+          setAuthCarregando(false)
+          throw new Error('A conta foi criada, mas não foi possível salvar o perfil. Entre em contato com o suporte.')
+        }
+      }
+      setAuthCarregando(false)
+      throw new Error(firebaseErrorMessage(error, 'Não foi possível criar sua conta. Tente novamente.'))
+    }
   }
 
-  function logout() {
-    setUsuario(null)
-    navigate('/login')
+  async function logout() {
+    try {
+      await signOut(auth)
+      navigate('/login')
+    } catch (error) {
+      setErroSessao(firebaseErrorMessage(error, 'Não foi possível sair da sua conta. Tente novamente.'))
+    }
+  }
+
+  async function saveAccount(updatedUser) {
+    const firebaseUser = auth.currentUser
+    if (!firebaseUser) throw new Error('Sua sessão expirou. Entre novamente.')
+
+    const { nome, sobrenome, telefone, nascimento } = updatedUser
+    try {
+      await setDoc(doc(db, 'usuarios', firebaseUser.uid), { nome, sobrenome, telefone, nascimento }, { merge: true })
+      const savedUser = { ...updatedUser, uid: firebaseUser.uid, email: firebaseUser.email || updatedUser.email }
+      setUsuario(savedUser)
+      return savedUser
+    } catch (error) {
+      throw new Error(firebaseErrorMessage(error, 'Não foi possível salvar seus dados. Tente novamente.'))
+    }
+  }
+
+  async function recoverPassword(email) {
+    try {
+      await sendPasswordResetEmail(auth, email)
+    } catch (error) {
+      throw new Error(firebaseErrorMessage(error, 'Não foi possível enviar as instruções. Tente novamente.'))
+    }
+  }
+
+  function showProducts() {
+    navigateTo('produtos')
   }
 
   return (
     <div className={`store-shell ${paginaAcesso ? 'tela-acesso' : ''}`}>
+      {erroSessao && <div className="alert alert-danger m-3" role="alert">{erroSessao}</div>}
       {!paginaAcesso && (
         <CabecalhoLoja
           categorias={categoriasHome}
@@ -202,8 +315,8 @@ function Loja() {
         <Route path="/produto/:idProduto" element={<RotaProduto produtos={products} />} />
         <Route path="/login" element={<PaginaLogin onLogin={login} onHome={goHome} onRegister={openRegistration} onRecover={openRecovery} />} />
         <Route path="/cadastro" element={<PaginaCadastro onHome={goHome} onCreateAccount={createAccount} />} />
-        <Route path="/recuperar-senha" element={<PaginaRecuperacao onHome={goHome} onBackToLogin={() => navigate('/login')} />} />
-        <Route path="/conta" element={usuario ? <main className="store-main"><PaginaConta usuario={usuario} onLogout={logout} onSave={setUsuario} /></main> : <Navigate to="/login" replace />} />
+        <Route path="/recuperar-senha" element={<PaginaRecuperacao onHome={goHome} onBackToLogin={() => navigate('/login')} onRecover={recoverPassword} />} />
+        <Route path="/conta" element={authCarregando ? <main className="store-main"><p className="p-4">Carregando sua conta...</p></main> : usuario ? <main className="store-main"><PaginaConta usuario={usuario} onLogout={logout} onSave={saveAccount} /></main> : <Navigate to="/login" replace />} />
         <Route path="/carrinho" element={<PaginaCarrinho />} />
         <Route path="/impressao" element={<main className="store-main"><PaginaImpressao onRequest={openPrintForm} /></main>} />
         <Route path="/impressao/formulario" element={<main className="store-main"><FormularioImpressao /></main>} />

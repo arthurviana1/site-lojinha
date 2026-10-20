@@ -5,21 +5,34 @@ import Imagem from './Imagem.jsx'
 export default function PaginaConta({ usuario, onLogout, onSave }) {
   const [dados, setDados] = useState(usuario)
   const [salvo, setSalvo] = useState(false)
+  const [erro, setErro] = useState('')
+  const [salvando, setSalvando] = useState(false)
 
   function atualizarCampo(event) {
     setDados({ ...dados, [event.target.name]: event.target.value })
     setSalvo(false)
+    setErro('')
   }
 
   function cancelar() {
     setDados(usuario)
     setSalvo(false)
+    setErro('')
   }
 
-  function salvar(event) {
+  async function salvar(event) {
     event.preventDefault()
-    onSave(dados)
-    setSalvo(true)
+    setErro('')
+    setSalvando(true)
+    try {
+      const dadosSalvos = await onSave(dados)
+      setDados(dadosSalvos)
+      setSalvo(true)
+    } catch (error) {
+      setErro(error.message || 'Não foi possível salvar seus dados.')
+    } finally {
+      setSalvando(false)
+    }
   }
 
   return (
@@ -27,7 +40,7 @@ export default function PaginaConta({ usuario, onLogout, onSave }) {
       <aside className="account-sidebar">
         <div className="account-profile">
           <Imagem src={iconePerfil} alt="Perfil do usuário" label="Perfil" className="account-user-icon" />
-          <p>Olá, {dados.nome || 'Valter'}</p>
+          <p>Olá, {dados.nome || 'usuário'}</p>
         </div>
         <div className="account-menu">
           <div className="account-menu-active"><span aria-hidden="true">◎</span> Informações do usuário</div>
@@ -48,7 +61,7 @@ export default function PaginaConta({ usuario, onLogout, onSave }) {
           </div>
           <div className="col-12">
             <label htmlFor="account-email">Gmail</label>
-            <input id="account-email" className="form-control" name="email" value={dados.email} onChange={atualizarCampo} />
+            <input id="account-email" className="form-control" name="email" type="email" value={dados.email} readOnly />
           </div>
           <div className="col-sm-6">
             <label htmlFor="account-phone">Telefone</label>
@@ -59,10 +72,11 @@ export default function PaginaConta({ usuario, onLogout, onSave }) {
             <input id="account-birthdate" className="form-control" name="nascimento" type="date" value={dados.nascimento} onChange={atualizarCampo} />
           </div>
         </div>
-        {salvo && <p className="account-saved" role="status">Informações salvas nesta sessão.</p>}
+        {erro && <p className="register-error" role="alert">{erro}</p>}
+        {salvo && <p className="account-saved" role="status">Informações salvas com sucesso.</p>}
         <div className="account-actions">
           <button className="btn btn-outline-primary" type="button" onClick={cancelar}>Cancelar</button>
-          <button className="btn btn-primary" type="submit">Salvar</button>
+          <button className="btn btn-primary" type="submit" disabled={salvando}>{salvando ? 'Salvando...' : 'Salvar'}</button>
         </div>
       </form>
     </section>

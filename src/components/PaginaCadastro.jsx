@@ -14,26 +14,36 @@ const camposIniciais = {
 export default function PaginaCadastro({ onHome, onCreateAccount }) {
   const [campos, setCampos] = useState(camposIniciais)
   const [erro, setErro] = useState('')
+  const [enviando, setEnviando] = useState(false)
 
   function atualizarCampo(event) {
     setCampos({ ...campos, [event.target.name]: event.target.value })
     setErro('')
   }
 
-  function enviarCadastro(event) {
+  async function enviarCadastro(event) {
     event.preventDefault()
     if (campos.senha !== campos.confirmarSenha) {
       setErro('As senhas não coincidem.')
       return
     }
 
-    onCreateAccount({
-      nome: campos.nome.trim(),
-      sobrenome: campos.sobrenome.trim(),
-      email: campos.email.trim(),
-      telefone: campos.telefone.trim(),
-      nascimento: '',
-    })
+    setErro('')
+    setEnviando(true)
+    try {
+      await onCreateAccount({
+        nome: campos.nome.trim(),
+        sobrenome: campos.sobrenome.trim(),
+        email: campos.email.trim(),
+        telefone: campos.telefone.trim(),
+        senha: campos.senha,
+        nascimento: '',
+      })
+    } catch (error) {
+      setErro(error.message || 'Não foi possível criar sua conta. Tente novamente.')
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -73,7 +83,7 @@ export default function PaginaCadastro({ onHome, onCreateAccount }) {
             </div>
           </div>
           {erro && <p className="register-error" role="alert">{erro}</p>}
-          <button className="register-submit btn btn-primary" type="submit">Criar conta</button>
+          <button className="register-submit btn btn-primary" type="submit" disabled={enviando}>{enviando ? 'Criando conta...' : 'Criar conta'}</button>
         </form>
       </section>
     </main>
