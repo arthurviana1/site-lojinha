@@ -1,3 +1,5 @@
+import ilustracaoImpressao from '../assets/impressao/ilustração.png'
+
 export default function PaginaImpressao({ onRequest }) {
   return (
     <section className="print-page" aria-label="Serviços de impressão">
@@ -7,6 +9,7 @@ export default function PaginaImpressao({ onRequest }) {
       </header>
       <section className="print-explanation" aria-label="Informações sobre impressão">
         <h2>Explicação ilustrativa</h2>
+        <img className="print-explanation-image" src={ilustracaoImpressao} alt="Ilustração explicando as opções e etapas do pedido de impressão" />
       </section>
       <div className="print-actions">
         <button className="btn btn-primary" type="button" onClick={onRequest}>Pedir minha impressão</button>

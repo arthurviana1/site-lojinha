@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import logoLojinha from '../assets/logo/logo-lojinha.png'
-import Imagem from './Imagem.jsx'
+import CabecalhoAcesso from './CabecalhoAcesso.jsx'
 
 export default function PaginaRecuperacao({ onHome, onBackToLogin, onRecover }) {
   const [email, setEmail] = useState('')
@@ -24,11 +23,7 @@ export default function PaginaRecuperacao({ onHome, onBackToLogin, onRecover }) 
 
   return (
     <main className="recovery-page">
-      <header className="login-brandbar">
-        <a href="#inicio" onClick={(event) => { event.preventDefault(); onHome() }} aria-label="Voltar à página inicial">
-          <Imagem src={logoLojinha} alt="Logo Lojinha a Graciosa" label="LG" className="login-logo" />
-        </a>
-      </header>
+      <CabecalhoAcesso onHome={onHome} />
       <section className="recovery-content">
         <form className="recovery-form" onSubmit={enviarRecuperacao}>
           <h1>Recuperar senha</h1>

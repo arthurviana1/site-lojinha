@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import logoLojinha from '../assets/logo/logo-lojinha.png'
-import Imagem from './Imagem.jsx'
+import CabecalhoAcesso from './CabecalhoAcesso.jsx'
 
 export default function PaginaLogin({ onLogin, onHome, onRegister, onRecover }) {
   const [email, setEmail] = useState('')
@@ -23,11 +22,7 @@ export default function PaginaLogin({ onLogin, onHome, onRegister, onRecover }) 
 
   return (
     <main className="login-page">
-      <header className="login-brandbar">
-        <a href="#inicio" onClick={(event) => { event.preventDefault(); onHome() }} aria-label="Voltar à página inicial">
-          <Imagem src={logoLojinha} alt="Logo Lojinha a Graciosa" label="LG" className="login-logo" />
-        </a>
-      </header>
+      <CabecalhoAcesso onHome={onHome} />
       <section className="login-content">
         <form className="login-form" onSubmit={enviarFormulario}>
           <h1>Faça seu login</h1>

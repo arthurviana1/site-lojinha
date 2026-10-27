@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import logoLojinha from '../assets/logo/logo-lojinha.png'
-import Imagem from './Imagem.jsx'
+import CabecalhoAcesso from './CabecalhoAcesso.jsx'
 
-const camposIniciais = {
+const valoresIniciais = {
   nome: '',
   sobrenome: '',
   email: '',
@@ -11,13 +10,23 @@ const camposIniciais = {
   confirmarSenha: '',
 }
 
+const camposCadastro = [
+  { id: 'register-name', name: 'nome', label: 'Nome', autoComplete: 'given-name' },
+  { id: 'register-surname', name: 'sobrenome', label: 'Sobrenome', autoComplete: 'family-name' },
+  { id: 'register-email', name: 'email', label: 'Email', type: 'email', autoComplete: 'email' },
+  { id: 'register-phone', name: 'telefone', label: 'Telefone', type: 'tel', autoComplete: 'tel' },
+  { id: 'register-password', name: 'senha', label: 'Senha', type: 'password', autoComplete: 'new-password' },
+  { id: 'register-confirm-password', name: 'confirmarSenha', label: 'Confirmar Senha', type: 'password', autoComplete: 'new-password' },
+]
+
 export default function PaginaCadastro({ onHome, onCreateAccount }) {
-  const [campos, setCampos] = useState(camposIniciais)
+  const [campos, setCampos] = useState(valoresIniciais)
   const [erro, setErro] = useState('')
   const [enviando, setEnviando] = useState(false)
 
   function atualizarCampo(event) {
-    setCampos({ ...campos, [event.target.name]: event.target.value })
+    const { name, value } = event.target
+    setCampos((atuais) => ({ ...atuais, [name]: value }))
     setErro('')
   }
 
@@ -48,39 +57,26 @@ export default function PaginaCadastro({ onHome, onCreateAccount }) {
 
   return (
     <main className="register-page">
-      <header className="login-brandbar">
-        <a href="#inicio" onClick={(event) => { event.preventDefault(); onHome() }} aria-label="Voltar à página inicial">
-          <Imagem src={logoLojinha} alt="Logo Lojinha a Graciosa" label="LG" className="login-logo" />
-        </a>
-      </header>
+      <CabecalhoAcesso onHome={onHome} />
       <section className="register-content">
         <form className="register-form" onSubmit={enviarCadastro}>
           <h1>Crie sua conta</h1>
           <div className="register-fields">
-            <div>
-              <label htmlFor="register-name">Nome</label>
-              <input id="register-name" className="form-control" name="nome" value={campos.nome} onChange={atualizarCampo} autoComplete="given-name" required />
-            </div>
-            <div>
-              <label htmlFor="register-surname">Sobrenome</label>
-              <input id="register-surname" className="form-control" name="sobrenome" value={campos.sobrenome} onChange={atualizarCampo} autoComplete="family-name" required />
-            </div>
-            <div>
-              <label htmlFor="register-email">Email</label>
-              <input id="register-email" className="form-control" name="email" type="email" value={campos.email} onChange={atualizarCampo} autoComplete="email" required />
-            </div>
-            <div>
-              <label htmlFor="register-phone">Telefone</label>
-              <input id="register-phone" className="form-control" name="telefone" type="tel" value={campos.telefone} onChange={atualizarCampo} autoComplete="tel" required />
-            </div>
-            <div>
-              <label htmlFor="register-password">Senha</label>
-              <input id="register-password" className="form-control" name="senha" type="password" value={campos.senha} onChange={atualizarCampo} autoComplete="new-password" required />
-            </div>
-            <div>
-              <label htmlFor="register-confirm-password">Confirmar Senha</label>
-              <input id="register-confirm-password" className="form-control" name="confirmarSenha" type="password" value={campos.confirmarSenha} onChange={atualizarCampo} autoComplete="new-password" required />
-            </div>
+            {camposCadastro.map(({ id, name, label, type = 'text', autoComplete }) => (
+              <div key={id}>
+                <label htmlFor={id}>{label}</label>
+                <input
+                  id={id}
+                  className="form-control"
+                  name={name}
+                  type={type}
+                  value={campos[name]}
+                  onChange={atualizarCampo}
+                  autoComplete={autoComplete}
+                  required
+                />
+              </div>
+            ))}
           </div>
           {erro && <p className="register-error" role="alert">{erro}</p>}
           <button className="register-submit btn btn-primary" type="submit" disabled={enviando}>{enviando ? 'Criando conta...' : 'Criar conta'}</button>
