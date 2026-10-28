@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import CabecalhoAcesso from './CabecalhoAcesso.jsx'
 
-export default function PaginaLogin({ onLogin, onHome, onRegister, onRecover }) {
+export default function PaginaLogin({ onLogin, onHome, onRegister, onRecover, authCarregando = false }) {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
@@ -34,7 +34,7 @@ export default function PaginaLogin({ onLogin, onHome, onRegister, onRecover }) 
           </div>
           <input id="login-password" className="form-control" type="password" autoComplete="current-password" value={senha} onChange={(event) => setSenha(event.target.value)} required />
           {erro && <p className="login-error" role="alert">{erro}</p>}
-          <button className="login-submit btn btn-primary" type="submit" disabled={enviando}>{enviando ? 'Entrando...' : 'Continuar'}</button>
+          <button className="login-submit btn btn-primary" type="submit" disabled={enviando || authCarregando}>{enviando ? 'Entrando...' : authCarregando ? 'Verificando sessão...' : 'Continuar'}</button>
           <p className="login-register-prompt">Não possui cadastro?</p>
           <button className="login-register btn btn-outline-primary" type="button" onClick={onRegister}>Crie sua conta</button>
         </form>

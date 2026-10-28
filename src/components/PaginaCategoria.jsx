@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import Imagem from './Imagem.jsx'
+import AdminIconButton from './AdminIconButton.jsx'
 
-export default function PaginaCategoria({ categorias, categoriaSelecionada, onSelectCategory, onSelectProduct, onHome, produtos }) {
+export default function PaginaCategoria({ categorias, categoriasGerenciaveis = [], categoriaSelecionada, onSelectCategory, onSelectProduct, onHome, produtos, adminMode = false, onAddCategory, onEditCategory, onDeleteCategory, onEditProduct, onDeleteProduct }) {
   const [pagina, setPagina] = useState(1)
   const produtosVisiveis = categoriaSelecionada === 'Categorias' || categoriaSelecionada === 'Mais vendidos'
     ? produtos
@@ -22,17 +23,27 @@ export default function PaginaCategoria({ categorias, categoriaSelecionada, onSe
       </section>
       <div className="category-layout container-fluid">
         <aside className="category-sidebar">
-          <h2>Categorias</h2>
+          <div className="category-admin-heading">
+            <h2>Categorias</h2>
+            {adminMode && <AdminIconButton action="add" label="Adicionar categoria" onClick={onAddCategory} />}
+          </div>
           <nav aria-label="Categorias de produtos">
             {categorias.map((categoria) => (
-              <button
-                className={categoriaSelecionada === categoria.name ? 'active' : ''}
-                key={categoria.name}
-                type="button"
-                onClick={() => selecionarCategoria(categoria.name)}
-              >
-                {categoria.name}
-              </button>
+              <div className="category-admin-item" key={categoria.name}>
+                <button
+                  className={categoriaSelecionada === categoria.name ? 'active' : ''}
+                  type="button"
+                  onClick={() => selecionarCategoria(categoria.name)}
+                >
+                  {categoria.name}
+                </button>
+                {adminMode && categoriasGerenciaveis.some((item) => item.name === categoria.name) && (
+                  <div className="admin-item-actions">
+                    <AdminIconButton action="edit" label={`Editar categoria ${categoria.name}`} onClick={() => onEditCategory(categoria)} />
+                    <AdminIconButton action="delete" label={`Excluir categoria ${categoria.name}`} onClick={() => onDeleteCategory(categoria)} />
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
         </aside>
@@ -41,12 +52,18 @@ export default function PaginaCategoria({ categorias, categoriaSelecionada, onSe
           {produtosVisiveis.length ? (
             <div className="category-products row row-cols-1 row-cols-md-2">
               {produtosDaPagina.map((produto) => (
-                <article className="col category-product" key={produto.name}>
+                <article className="col category-product admin-store-item" key={produto.name}>
                   <button type="button" className="category-product-button" onClick={() => onSelectProduct(produto)}>
                     <Imagem src={produto.image} alt={produto.name} label={produto.name} className="category-product-image" />
                     <span>{produto.name}</span>
                     <strong>{produto.price}</strong>
                   </button>
+                  {adminMode && (
+                    <div className="admin-item-actions">
+                      <AdminIconButton action="edit" label={`Editar produto ${produto.name}`} onClick={() => onEditProduct(produto)} />
+                      <AdminIconButton action="delete" label={`Excluir produto ${produto.name}`} onClick={() => onDeleteProduct(produto)} />
+                    </div>
+                  )}
                 </article>
               ))}
             </div>
@@ -55,11 +72,11 @@ export default function PaginaCategoria({ categorias, categoriaSelecionada, onSe
           )}
           {produtosVisiveis.length > 0 && (
             <nav className="pagination-bar" aria-label="Paginação de produtos">
-              <button type="button" disabled={pagina === 1} onClick={() => setPagina(pagina - 1)}>← Previous page</button>
+              <button type="button" disabled={pagina === 1} onClick={() => setPagina(pagina - 1)}>← Página anterior</button>
               {Array.from({ length: totalPaginas }, (_, index) => index + 1).map((numero) => (
                 <button className={pagina === numero ? 'active' : ''} type="button" key={numero} onClick={() => setPagina(numero)}>{numero}</button>
               ))}
-              <button type="button" disabled={pagina === totalPaginas} onClick={() => setPagina(pagina + 1)}>Next page →</button>
+              <button type="button" disabled={pagina === totalPaginas} onClick={() => setPagina(pagina + 1)}>Próxima página →</button>
             </nav>
           )}
         </section>

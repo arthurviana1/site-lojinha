@@ -1,6 +1,7 @@
 import Imagem from './Imagem.jsx'
+import AdminIconButton from './AdminIconButton.jsx'
 
-export default function CarrosselDestaques({ activeSlide, onChangeSlide, slides }) {
+export default function CarrosselDestaques({ activeSlide, onChangeSlide, slides, adminMode = false, onAdd, onEdit, onDelete }) {
   const destaque = slides[activeSlide]
 
   return (
@@ -22,6 +23,13 @@ export default function CarrosselDestaques({ activeSlide, onChangeSlide, slides 
           <button key={item.title} type="button" className={index === activeSlide ? 'active' : ''} aria-label={`Mostrar destaque ${index + 1}: ${item.title}`} aria-current={index === activeSlide ? 'true' : undefined} onClick={() => onChangeSlide(index)} />
         ))}
       </div>
+      {adminMode && (
+        <div className="admin-store-controls admin-carousel-controls" aria-label="Gerenciar destaque atual">
+          <AdminIconButton action="add" label="Adicionar destaque" onClick={onAdd} />
+          <AdminIconButton action="edit" label="Editar destaque" onClick={onEdit} />
+          <AdminIconButton action="delete" label="Excluir destaque" onClick={onDelete} />
+        </div>
+      )}
     </section>
   )
 }

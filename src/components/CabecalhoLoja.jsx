@@ -3,7 +3,7 @@ import iconeCarrinho from '../assets/icones/icone-carrinho.png'
 import iconePerfil from '../assets/icones/icone-perfil.png'
 import Imagem from './Imagem.jsx'
 
-export default function CabecalhoLoja({ categorias, category, activeNav, onHome, onOpenProducts, onOpenPrint, onOpenAccount, onOpenCart, onCategoryChange, onSearchSubmit, search, setSearch }) {
+export default function CabecalhoLoja({ categorias, category, activeNav, onHome, onOpenProducts, onOpenPrint, onOpenAccount, onOpenCart, onCategoryChange, onSearchSubmit, search, setSearch, adminMode = false, onLogout }) {
   return (
     <header className="site-header container-fluid d-flex align-items-center">
       <a className="brand flex-shrink-0" href="#inicio" onClick={(event) => { event.preventDefault(); onHome() }} aria-label="Lojinha a Graciosa, página inicial">
@@ -24,6 +24,7 @@ export default function CabecalhoLoja({ categorias, category, activeNav, onHome,
         <a className={`nav-link ${activeNav === 'impressao' ? 'nav-current' : ''}`} href="#impressao" aria-current={activeNav === 'impressao' ? 'location' : undefined} onClick={(event) => { event.preventDefault(); onOpenPrint() }}>Impressão</a>
       </nav>
       <div className="header-actions d-flex align-items-center">
+        {adminMode && <button className="admin-header-logout btn" type="button" onClick={onLogout}>Sair</button>}
         <button className="cart-link btn" type="button" onClick={onOpenCart} aria-label="Carrinho" title="Carrinho"><Imagem src={iconeCarrinho} alt="" label="Carrinho" className="cart-icon" /></button>
         <button className="header-link account-link btn" type="button" onClick={onOpenAccount} aria-label="Minha conta" title="Minha conta">
           <Imagem src={iconePerfil} alt="" label="Perfil" className="account-icon" />

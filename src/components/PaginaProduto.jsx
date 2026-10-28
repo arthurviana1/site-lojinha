@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import Imagem from './Imagem.jsx'
+import AdminIconButton from './AdminIconButton.jsx'
 
-export default function PaginaProduto({ produto, onBack }) {
+export default function PaginaProduto({ produto, onBack, adminMode = false, onEdit, onDelete }) {
   const imagens = produto.gallery ?? [produto.image]
   const especificacoes = produto.specifications ?? [
     `Categoria: ${produto.category}`,
@@ -33,6 +34,12 @@ export default function PaginaProduto({ produto, onBack }) {
 
         <section className="product-description" aria-labelledby="product-title">
           <h1 id="product-title">{produto.name}</h1>
+          {adminMode && (
+            <div className="admin-item-actions product-admin-actions">
+              <AdminIconButton action="edit" label="Editar produto" onClick={onEdit} />
+              <AdminIconButton action="delete" label="Excluir produto" onClick={onDelete} />
+            </div>
+          )}
           <p>{produto.description ?? `${produto.name}, disponível na categoria ${produto.category}.`}</p>
           {produto.brand && <p className="product-brand">Marca: {produto.brand}</p>}
           <div className="product-specifications">

@@ -19,7 +19,7 @@ const camposCadastro = [
   { id: 'register-confirm-password', name: 'confirmarSenha', label: 'Confirmar Senha', type: 'password', autoComplete: 'new-password' },
 ]
 
-export default function PaginaCadastro({ onHome, onCreateAccount }) {
+export default function PaginaCadastro({ onHome, onCreateAccount, authCarregando = false }) {
   const [campos, setCampos] = useState(valoresIniciais)
   const [erro, setErro] = useState('')
   const [enviando, setEnviando] = useState(false)
@@ -79,7 +79,7 @@ export default function PaginaCadastro({ onHome, onCreateAccount }) {
             ))}
           </div>
           {erro && <p className="register-error" role="alert">{erro}</p>}
-          <button className="register-submit btn btn-primary" type="submit" disabled={enviando}>{enviando ? 'Criando conta...' : 'Criar conta'}</button>
+          <button className="register-submit btn btn-primary" type="submit" disabled={enviando || authCarregando}>{enviando ? 'Criando conta...' : authCarregando ? 'Verificando sessão...' : 'Criar conta'}</button>
         </form>
       </section>
     </main>
